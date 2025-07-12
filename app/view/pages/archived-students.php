@@ -1,20 +1,10 @@
-<form id="student_list_form" class="p-4 mx-5">
+this is archived student<form id="restore_students_form" class="p-4 mx-5">
 <table class="table table-dark table-striped">
-    <div class="text-end m-2">
-        <a href="add-student" type="button" class="btn btn-primary align-end ">Add Student</a>
-    </div>
-    <div class="text-end m-2">
-        <a href="restore-student" type="button" class="btn btn-danger align-end ">Restore Student</a>
-    </div>
   <thead>
     <tr>
-      <th scope="col">Student Id</th>
       <th scope="col">Full Name</th>
-      <th scope="col">Email</th>
       <th scope="col">Course</th>
       <th scope="col">Year Level</th>
-      <th scope="col">Section</th>
-      <th scope="col">School Year</th>
       <th scope="col">Status</th>
       <th scope="col">Actions</th>
     </tr>
@@ -29,7 +19,7 @@
 
 
 <!-- MODAL FOR DELETE CONFIRMATION -->
-<form id="del-modal-form">
+<form id="restore-modal-form">
   <div class="modal" id="delete-student-modal" tabindex="-1">
   <div class="modal-dialog">
     <div class="modal-content">

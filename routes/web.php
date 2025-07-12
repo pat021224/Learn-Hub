@@ -26,6 +26,14 @@ return [
     'add-student' => function(){
         require_once __DIR__ . '/../app/view/pages/add-student.php';
     },
+    'restore-student' => function(){
+        require_once __DIR__ . '/../app/view/pages/archived-students.php';
+    },
+    'edit-student' => function(){
+        require_once __DIR__ . '/../app/view/pages/edit-student.php';
+    },'nationalities' => function(){
+        require_once __DIR__ . '/../public/assets/nationalities.json';
+    },
 
 
 
@@ -37,8 +45,34 @@ return [
         $controller->store();
     },
     'get/course/count' => function(){
+        $course = $_POST['course'] ?? null;
+        $schoolyear = $_POST['school_year'] ?? null;
         $controller = new studentController();
-        $controller->generateStudentId();
+        $controller->generateStudentId($course, $schoolyear);
+    },
+    'student/list' => function(){
+        $controller = new studentController();
+        $controller->show();
+    },
+    'edit/student' => function(){
+        $id = $_POST['id'];
+        $controller = new studentController();
+        $controller->load($id);
+    },
+    'update/student' => function(){     //update student
+        $controller = new studentController();
+        $controller->update();
+    },
+    'modal/response' => function(){
+        $id = $_POST['id'];
+        $controller = new studentController();
+        $controller->modalResponse($id);
+    },
+    'delete/student' => function(){
+        $id = $_POST['id'];
+        $controller = new studentController();
+        $controller->delete($id);
     }
+    
 
 ];

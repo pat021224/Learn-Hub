@@ -1,128 +1,28 @@
-// Initialize Flatpickr on the DOB input field
-document.addEventListener('DOMContentLoaded', async function () {
-  flatpickr("#dob", {
-    dateFormat: "Y-m-d",
-    maxDate: "today"
-  });
-
-  //Auto-address. Province > Municipality > Barangay > Zip Code
-  const provinceSelect = document.getElementById('province');
-  const municipalitySelect = document.getElementById('municipality');
-  const barangaySelect = document.getElementById('barangay');
-  const zipcodeInput = document.getElementById('zipcode');
-
-  let locationData = {};
-  let zipData = [];
-
-  //load JSON from *ph_address_data.json* <-- province/municipality/barangay only
-  //and *ph-zip-codes.json* <-- this has the zip code
-  try {
-    const [locationRes, zipRes] = await Promise.all([
-      fetch('assets/ph_address_data.json'),
-      fetch('assets/ph-zip-codes.json')
-    ]);
-
-    locationData = await locationRes.json();
-    zipData = await zipRes.json();
-
-    loadProvinces();
-  } catch (err) {
-    console.error('Failed to load address or zip data:', err);
+//loaded a nationality list in select option.
+document.addEventListener('DOMContentLoaded', async () => {
+  const nationality = document.getElementById('nationality')
+  if(nationality){
+    const response = await fetch('nationalities', {
+      method: 'POST',
+      headers: {
+        'X-Requested-With': 'XMLHttpRequest'
+      }
+    })
+    const data = await response.json();
+    
+    data.forEach(item => {
+      const option = document.createElement('option');
+      option.value = item.name;
+      option.textContent = item.name;
+      nationality.appendChild(option);
+    });
   }
-
-  function loadProvinces() {
-    let provinces = [];
-
-    for (const regionCode in locationData) {
-      const region = locationData[regionCode];
-      if (region.province_list) {
-        for (const province in region.province_list) {
-          provinces.push(province);
-        }
-      }
-    }
-
-    provinces.sort().forEach(province => {
-      const option = document.createElement('option');
-      option.value = province;
-      option.textContent = province;
-      provinceSelect.appendChild(option);
-    });
-
-    provinceSelect.disabled = false;
-  }
-
-  provinceSelect.addEventListener('change', function () {
-    municipalitySelect.innerHTML = '<option selected disabled>Municipality</option>';
-    barangaySelect.innerHTML = '<option selected disabled>Barangay</option>';
-    municipalitySelect.disabled = false;
-    barangaySelect.disabled = true;
-
-    const selectedProvince = this.value;
-    let municipalities = [];
-
-    for (const regionCode in locationData) {
-      const region = locationData[regionCode];
-      if (region.province_list && region.province_list[selectedProvince]) {
-        const provinceData = region.province_list[selectedProvince];
-        municipalities = Object.keys(provinceData.municipality_list);
-        break;
-      }
-    }
-
-    municipalities.sort().forEach(muni => {
-      const option = document.createElement('option');
-      option.value = muni;
-      option.textContent = muni;
-      municipalitySelect.appendChild(option);
-    });
-  });
-
-  municipalitySelect.addEventListener('change', function () {
-    barangaySelect.innerHTML = '<option selected disabled>Barangay</option>';
-    barangaySelect.disabled = false;
-
-    const selectedProvince = provinceSelect.value;
-    const selectedMunicipality = this.value;
-    let barangays = [];
-
-    for (const regionCode in locationData) {
-      const region = locationData[regionCode];
-      if (
-        region.province_list &&
-        region.province_list[selectedProvince] &&
-        region.province_list[selectedProvince].municipality_list[selectedMunicipality]
-      ) {
-        barangays = region.province_list[selectedProvince]
-          .municipality_list[selectedMunicipality].barangay_list;
-        break;
-      }
-    }
-
-    barangays.sort().forEach(brgy => {
-      const option = document.createElement('option');
-      option.value = brgy;
-      option.textContent = brgy;
-      barangaySelect.appendChild(option);
-    });
-
-    const toTitleCase = (str) =>
-      str.toLowerCase().replace(/\b\w/g, char => char.toUpperCase());
-
-    const combinedArea = `PH - ${toTitleCase(selectedProvince)} ${toTitleCase(selectedMunicipality)}`;
-    const match = zipData.find(entry => entry.area === combinedArea);
-
-    if (match) {
-      zipcodeInput.value = match.zip;
-    } else {
-      zipcodeInput.value = '';
-    }
-  });
-});
+})
 
 //Auto generate school year on page load. (Base on philippine school year)
-function getSchoolYear() {
-    const schoolYear = document.getElementById('school_year');
+const schoolYear = document.getElementById('school_year');
+if(schoolYear){
+  function getSchoolYear() {
     const today = new Date();
     const year = today.getFullYear();
     const month = today.getMonth(); // January = 0
@@ -136,15 +36,20 @@ function getSchoolYear() {
     }
 
 }
-document.addEventListener('DOMContentLoaded', getSchoolYear());
+  document.addEventListener('DOMContentLoaded', getSchoolYear);
+}
+
 
 
 //get data from inputs in *add-student.php* 
 //then send it to *studentcontroller.php* -> *function store()*
-document.getElementById('add_student_form').addEventListener('submit', async function(e){
+const addStudentForm = document.getElementById('add_student_form');
+if(addStudentForm){
+  addStudentForm.addEventListener('submit', async (e) => {
     e.preventDefault();
-    const formData = new FormData(this);
-    const response = await fetch('store/student', {
+    const formData = new FormData(addStudentForm);
+    try {
+      const response = await fetch('store/student', {
         method: 'POST',
         headers: {
             'X-Requested-With': 'XMLHttpRequest'
@@ -153,17 +58,24 @@ document.getElementById('add_student_form').addEventListener('submit', async fun
     })
     const data = await response.text();
     document.getElementById('response').innerHTML = data;  
-})
+    } catch (error) {
+      console.error('error:', error);
+    }
+  }) 
+}
 
-//get the selected course and send it to *studentcontroller.php* -> *function generateStudentId()*
-document.getElementById('course').addEventListener('change', async function(){
-  const course = document.getElementById('course').value;
+//get the selected course and send it to *studentcontroller.php*
+const courseSelect = document.getElementById('course')
+if(courseSelect){
+  course.addEventListener('change', async () => {
+  const course = courseSelect.value;
   const schoolYear = document.getElementById('school_year').value;
   const formData = new FormData();
 
   formData.append('course', course);
   formData.append('school_year', schoolYear);
-  const response = await fetch('get/course/count', {
+  try {
+    const response = await fetch('get/course/count', {
     method: 'POST',
     headers: {
             'X-Requested-With': 'XMLHttpRequest'
@@ -172,4 +84,133 @@ document.getElementById('course').addEventListener('change', async function(){
   })
   const data = await response.text();
   document.getElementById('response').innerHTML = data;
+  } catch (error) {
+    console.error('error:', error);
+  }
+  }) 
+}
+  
+
+//generate the list of student in the table
+async function loadStudentList(){
+  const studentListForm = document.getElementById('student_list_form');
+  if(studentListForm){
+    const formData = new FormData(studentListForm)
+      const response = await fetch('student/list', {
+        method: 'POST',
+        headers: {
+              'X-Requested-With': 'XMLHttpRequest'
+          },
+          body: formData
+      })
+      const data = await response.text();
+      document.getElementById('response').innerHTML = data;
+  }
+}
+document.addEventListener('DOMContentLoaded', loadStudentList)
+
+
+//genarate the data of selected student to be edited
+const editStudent = document.getElementById('edit_student_form');
+if(editStudent){
+  document.addEventListener('DOMContentLoaded', async () => {
+    const formData = new FormData(editStudent);
+
+    
+    const response = await fetch('edit/student', {
+      method: 'POST',
+      headers: {
+              'X-Requested-With': 'XMLHttpRequest'
+          },
+          body: formData
+    })
+    const data = await response.json();
+    document.getElementById('first_name').value = data.first_name;
+    document.getElementById('middle_name').value = data.middle_name;
+    document.getElementById('last_name').value = data.last_name;
+    document.getElementById('gender').value = data.gender;
+    document.getElementById('dob').value = data.dob;
+    document.getElementById('email').value = data.email;
+    document.getElementById('student_contact').value = data.student_contact;
+    document.getElementById('guardian_name').value = data.guardian_name;
+    document.getElementById('guardian_contact').value = data.guardian_contact;
+    document.getElementById('nationality').value = data.nationality;
+    document.getElementById('province').value = data.province;
+    document.getElementById('municipality').value = data.municipality;
+    document.getElementById('barangay').value = data.barangay;
+    document.getElementById('street').value = data.street;
+    document.getElementById('zipcode').value = data.zipcode;
+    document.getElementById('course').value = data.course;
+    document.getElementById('year_level').value = data.year_level;
+    document.getElementById('section').value = data.section;
+    document.getElementById('school_year').value = data.school_year;
+    document.getElementById('status').value = data.status;
+  })
+}
+
+
+//update the selected student
+if(editStudent){
+    editStudent.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const formData = new FormData(editStudent);
+      const response = await fetch('update/student', {
+        method: 'POST',
+        headers: {
+          'X-Requested-With': 'XMLHttpRequest'
+        },
+        body: formData
+      })
+      const data = await response.text();
+      document.getElementById('response').innerHTML = data;
+  })
+}
+
+
+//set the id of selected students to be deleted
+let selectedId = null;
+document.addEventListener('click', async (e) => {
+  const button = e.target.closest('.delete');
+  if(button){
+    e.preventDefault();
+    selectedId = button.getAttribute('data-id');
+    const formData = new FormData;
+    formData.append('id', selectedId);
+    const response = await fetch('modal/response', {
+      method: 'POST',
+      headers: {
+        'X-Requested-With': 'XMLHttpRequest'
+      },
+      body: formData
+    })
+    const data = await response.text();
+    document.getElementById('modal-response').innerHTML = data;
+
+  }
 })
+
+//send the id of the selected student to be deleted to controller 
+const confirmDelete = document.getElementById('confirm-delete-student');
+if(confirmDelete){
+  confirmDelete.addEventListener('click', async (e) => {
+    e.preventDefault();
+    const formData = new FormData;
+    formData.append('id', selectedId);
+    const response = await fetch('delete/student', {
+      method: 'POST',
+      headers: {
+              'X-Requested-With': 'XMLHttpRequest'
+          },
+          body: formData
+    })
+    const data = await response.text();
+    document.getElementById('delete-response').textContent = data;
+    const modal = bootstrap.Modal.getInstance(document.getElementById('delete-student-modal'));
+      modal.hide();
+      loadStudentList();
+  })
+}
+
+
+
+
