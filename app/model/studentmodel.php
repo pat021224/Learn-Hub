@@ -41,10 +41,10 @@ class studentModel extends Database{
     }
 
     //get all data of students that are not deleted
-    function getStudentList(){
-        $query = "SELECT * FROM students WHERE is_deleted = 0";
+    function getByIsDeleted($isDeleted){
+        $query = "SELECT * FROM students WHERE is_deleted = ?";
         $stmt = $this->connect()->prepare($query);
-        $stmt->execute();
+        $stmt->execute([$isDeleted]);
         return $stmt->fetchAll(); 
     }
 
@@ -83,5 +83,17 @@ class studentModel extends Database{
        $query = "UPDATE students SET is_deleted = 1 WHERE id = ?";
        $stmt = $this->connect()->prepare($query);
        return $stmt->execute([$id]);
+    }
+    //restore soft deleted students
+    function restoreStudent($id){
+       $query = "UPDATE students SET is_deleted = 0 WHERE id = ?";
+       $stmt = $this->connect()->prepare($query);
+       return $stmt->execute([$id]);
+    }
+    //permanently delete students
+    function permanentDeleteStudent($id){
+        $query = "DELETE FROM students WHERE id = ?";
+        $stmt = $this->connect()->prepare($query);
+        return $stmt->execute([$id]);
     }
 }

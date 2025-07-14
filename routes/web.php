@@ -31,8 +31,12 @@ return [
     },
     'edit-student' => function(){
         require_once __DIR__ . '/../app/view/pages/edit-student.php';
-    },'nationalities' => function(){
+    },
+    'nationalities' => function(){
         require_once __DIR__ . '/../public/assets/nationalities.json';
+    },
+    'login' => function(){
+        require_once __DIR__ . '/../app/view/pages/login.php';
     },
 
 
@@ -51,8 +55,9 @@ return [
         $controller->generateStudentId($course, $schoolyear);
     },
     'student/list' => function(){
+        $isDeleted = $_POST['isDeleted'];
         $controller = new studentController();
-        $controller->show();
+        $controller->show($isDeleted);
     },
     'edit/student' => function(){
         $id = $_POST['id'];
@@ -72,6 +77,31 @@ return [
         $id = $_POST['id'];
         $controller = new studentController();
         $controller->delete($id);
+    },
+    'archived/students' => function(){
+        $isDeleted = $_POST['isDeleted'];
+        $controller = new studentController();
+        $controller->getArchivedStudents($isDeleted);
+    },
+    'restore/modal/response' => function(){
+        $id = $_POST['id'];
+        $controller = new studentController();
+        $controller->restoreModalResponse($id);
+    },
+    'restore/student' => function(){
+        $id = $_POST['id'];
+        $controller = new studentController();
+        $controller->restore($id);
+    },
+    'permanent/delete/modal/response' => function(){
+        $id = $_POST['id'];
+        $controller = new studentController();
+        $controller->permanentDeleteModalResponse($id);
+    },
+    'permanent/delete/student' => function(){
+        $id = $_POST['id'];
+        $controller = new studentController();
+        $controller->permanentDelete($id);
     }
     
 

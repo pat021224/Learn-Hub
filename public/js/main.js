@@ -1,15 +1,49 @@
+//calling all function that need to run on page load
+document.addEventListener('DOMContentLoaded', () => {
+    getSchoolYear();
+    loadStudentList();
+    loadArchivedStudents();
+    loadNationality();
+})
+//reusable fetch code for DRYness
+async function PostData(url, formData = null){
+  try {
+      const option = {
+      method: 'POST',
+      headers: {'X-Requested-With': 'XMLHttpRequest'},
+    };
+  if(formData){
+      option.body = formData;
+    }
+    const response = await fetch(url, option);
+    return response.text();
+  } catch (error) {
+    console.error('error:', error);
+  }
+}
+
+//reusable fetch for json
+async function PostJson(url, formData = null){
+  try {
+    const option = {
+      method: 'POST',
+      headers: {'X-Requested-With': 'XMLHttpRequest'},
+    };
+    if(formData){
+      option.body = formData;
+    }
+    const response = await fetch(url, option);
+    return response.json();
+  } catch (error) {
+    console.error('error:', error);
+  }
+}
+
 //loaded a nationality list in select option.
-document.addEventListener('DOMContentLoaded', async () => {
+async function loadNationality() {
   const nationality = document.getElementById('nationality')
   if(nationality){
-    const response = await fetch('nationalities', {
-      method: 'POST',
-      headers: {
-        'X-Requested-With': 'XMLHttpRequest'
-      }
-    })
-    const data = await response.json();
-    
+    const data = await PostJson('nationalities');
     data.forEach(item => {
       const option = document.createElement('option');
       option.value = item.name;
@@ -17,50 +51,33 @@ document.addEventListener('DOMContentLoaded', async () => {
       nationality.appendChild(option);
     });
   }
-})
+}
 
 //Auto generate school year on page load. (Base on philippine school year)
+function getSchoolYear() {
 const schoolYear = document.getElementById('school_year');
-if(schoolYear){
-  function getSchoolYear() {
-    const today = new Date();
-    const year = today.getFullYear();
-    const month = today.getMonth(); // January = 0
-
-    if (month >= 6) {
-        // June or later = new school year starts
-        schoolYear.value = `${year}-${year + 1}`;
-    } else {
-        // Before June = still in previous school year
-        schoolYear.value = `${year - 1}-${year}`;
-    }
-
-}
-  document.addEventListener('DOMContentLoaded', getSchoolYear);
+  if(schoolYear){
+      const today = new Date();
+      const year = today.getFullYear();
+      const month = today.getMonth(); // January = 0
+      if (month >= 6) {
+          // June or later = new school year starts
+          schoolYear.value = `${year}-${year + 1}`;
+      } else {
+          // Before June = still in previous school year
+          schoolYear.value = `${year - 1}-${year}`;
+      }
+  } 
 }
 
-
-
-//get data from inputs in *add-student.php* 
-//then send it to *studentcontroller.php* -> *function store()*
+//send student data to database
 const addStudentForm = document.getElementById('add_student_form');
 if(addStudentForm){
   addStudentForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     const formData = new FormData(addStudentForm);
-    try {
-      const response = await fetch('store/student', {
-        method: 'POST',
-        headers: {
-            'X-Requested-With': 'XMLHttpRequest'
-        },
-        body: formData
-    })
-    const data = await response.text();
+    const data = await PostData('store/student', formData);
     document.getElementById('response').innerHTML = data;  
-    } catch (error) {
-      console.error('error:', error);
-    }
   }) 
 }
 
@@ -71,60 +88,43 @@ if(courseSelect){
   const course = courseSelect.value;
   const schoolYear = document.getElementById('school_year').value;
   const formData = new FormData();
-
   formData.append('course', course);
   formData.append('school_year', schoolYear);
-  try {
-    const response = await fetch('get/course/count', {
-    method: 'POST',
-    headers: {
-            'X-Requested-With': 'XMLHttpRequest'
-        },
-        body: formData
-  })
-  const data = await response.text();
+  const data = await PostData('get/course/count', formData);
   document.getElementById('response').innerHTML = data;
-  } catch (error) {
-    console.error('error:', error);
-  }
   }) 
 }
-  
 
 //generate the list of student in the table
 async function loadStudentList(){
   const studentListForm = document.getElementById('student_list_form');
   if(studentListForm){
-    const formData = new FormData(studentListForm)
-      const response = await fetch('student/list', {
-        method: 'POST',
-        headers: {
-              'X-Requested-With': 'XMLHttpRequest'
-          },
-          body: formData
-      })
-      const data = await response.text();
+    const isDeleted = 0;
+    const formData = new FormData(studentListForm);
+      formData.append('isDeleted', isDeleted);
+      const data = await PostData('student/list', formData);
       document.getElementById('response').innerHTML = data;
   }
 }
-document.addEventListener('DOMContentLoaded', loadStudentList)
 
+//load student that are soft deleted
+async function loadArchivedStudents(){
+  const archivedForm = document.getElementById('restore_students_form')
+  if(archivedForm){
+    const formData = new FormData(archivedForm);
+    const isDeleted = 1;
+    formData.append('isDeleted', isDeleted);
+    const data = await PostData('archived/students', formData);
+    document.getElementById('response').innerHTML = data;
+  }
+}
 
 //genarate the data of selected student to be edited
 const editStudent = document.getElementById('edit_student_form');
 if(editStudent){
   document.addEventListener('DOMContentLoaded', async () => {
     const formData = new FormData(editStudent);
-
-    
-    const response = await fetch('edit/student', {
-      method: 'POST',
-      headers: {
-              'X-Requested-With': 'XMLHttpRequest'
-          },
-          body: formData
-    })
-    const data = await response.json();
+    const data = await PostJson('edit/student', formData);
     document.getElementById('first_name').value = data.first_name;
     document.getElementById('middle_name').value = data.middle_name;
     document.getElementById('last_name').value = data.last_name;
@@ -148,44 +148,47 @@ if(editStudent){
   })
 }
 
-
 //update the selected student
 if(editStudent){
     editStudent.addEventListener('submit', async (e) => {
       e.preventDefault();
       const formData = new FormData(editStudent);
-      const response = await fetch('update/student', {
-        method: 'POST',
-        headers: {
-          'X-Requested-With': 'XMLHttpRequest'
-        },
-        body: formData
-      })
-      const data = await response.text();
+      const data = await PostData('update/student', formData);
       document.getElementById('response').innerHTML = data;
   })
 }
 
-
 //set the id of selected students to be deleted
 let selectedId = null;
 document.addEventListener('click', async (e) => {
-  const button = e.target.closest('.delete');
-  if(button){
+  const deleteButton = e.target.closest('.delete');
+  if(deleteButton){
     e.preventDefault();
-    selectedId = button.getAttribute('data-id');
+    selectedId = deleteButton.getAttribute('data-id');
     const formData = new FormData;
     formData.append('id', selectedId);
-    const response = await fetch('modal/response', {
-      method: 'POST',
-      headers: {
-        'X-Requested-With': 'XMLHttpRequest'
-      },
-      body: formData
-    })
-    const data = await response.text();
+    const data = await PostData('modal/response', formData);
     document.getElementById('modal-response').innerHTML = data;
-
+  }
+  //set the id of selected student to be restored
+  const restoreButton = e.target.closest('.restore');
+  if(restoreButton){
+    e.preventDefault();
+    formData = new FormData();
+    selectedId = restoreButton.getAttribute('data-id');
+    formData.append('id', selectedId);
+    const data = await PostData('restore/modal/response', formData);
+    document.getElementById('modal-response').innerHTML = data;
+  }
+  //set the id of selected student to be permanently deleted
+  const permanentDeleteButton = e.target.closest('.permanent-delete');
+  if(permanentDeleteButton){
+    e.preventDefault();
+    selectedId = permanentDeleteButton.getAttribute('data-id');
+    const formData = new FormData();
+    formData.append('id', selectedId);
+    const data = await PostData('permanent/delete/modal/response', formData);
+    document.getElementById('perma-modal-response').innerHTML = data;
   }
 })
 
@@ -196,21 +199,38 @@ if(confirmDelete){
     e.preventDefault();
     const formData = new FormData;
     formData.append('id', selectedId);
-    const response = await fetch('delete/student', {
-      method: 'POST',
-      headers: {
-              'X-Requested-With': 'XMLHttpRequest'
-          },
-          body: formData
-    })
-    const data = await response.text();
-    document.getElementById('delete-response').textContent = data;
+    const data = await PostData('delete/student', formData);
+    document.getElementById('delete-response').innerHTML = data;
     const modal = bootstrap.Modal.getInstance(document.getElementById('delete-student-modal'));
       modal.hide();
       loadStudentList();
   })
 }
 
+//send the id of selected student to be restore in controller
+const confirmRestore = document.getElementById('confirm-restore-student')
+if(confirmRestore){
+  confirmRestore.addEventListener('click', async (e) => {
+    e.preventDefault();
+    const formData = new FormData();
+    formData.append('id', selectedId);
+    const data = await PostData('restore/student', formData);
+    document.getElementById('restore-response').innerHTML = data;
+    const modal = bootstrap.Modal.getInstance(document.getElementById('restore-student-modal'));
+    modal.hide();
+    loadArchivedStudents();
+  })
+}
 
-
-
+const confirmPermanentDelete = document.getElementById('confirm-permanent-delete-student');
+if(confirmPermanentDelete){
+  confirmPermanentDelete.addEventListener('click', async () => {
+    const formData = new FormData();
+    formData.append('id', selectedId);
+    const data = await PostData('permanent/delete/student', formData);
+    document.getElementById('restore-response').innerHTML = data;
+    const modal = bootstrap.Modal.getInstance(document.getElementById('permanent-delete-student-modal'));
+    modal.hide();
+    loadArchivedStudents();
+  })
+}

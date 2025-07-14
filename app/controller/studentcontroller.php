@@ -54,12 +54,13 @@ class studentController extends studentModel{
             );
             if($result){
                 echo "You successfully added " . $data['first_name'] . " " . $data['last_name'] . " to the database";
-                return;
+            }else{
+                echo "Creating Student profile for " . $data['first_name'] . " " . $data['last_name'] . " failed!";
             }
         }
         //show the list of students on table
-        function show(){
-            $data = $this->getStudentList();
+        function show($isDeleted){
+            $data = $this->getByIsDeleted($isDeleted);
             
             foreach ($data as $row) {
                 echo "<tr>";
@@ -72,9 +73,9 @@ class studentController extends studentModel{
                     echo "<td>" . $row['school_year'] . "</td>";
                     echo "<td>" . $row['status'] . "</td>";
                     echo "<td class='text-center'>
-                        <a href='edit-student?id=" . $row['id'] . "' title='Edit' class='me-2'><i class='bi bi-pencil'></i></a>
-                        <a href='#' title='Profile' id='" . $row['id'] . "' class='me-2'><i class='bi bi-person-circle'></i></a>
-                        <a href='#' title='Delete' data-id='" . $row['id'] . "' class='delete' data-bs-toggle='modal' data-bs-target='#delete-student-modal'><i class='bi bi-trash text-danger'></i></a></td>";
+                        <a href='edit-student?id=" . $row['id'] . "' title='Edit' class='btn btn-outline-primary btn-sm'><i class='bi bi-pencil'></i></a>
+                        <a href='#' title='Profile' id='" . $row['id'] . "' class='btn btn-outline-secondary btn-sm'><i class='bi bi-person-circle'></i></a>
+                        <a href='#' title='Delete' data-id='" . $row['id'] . "' class='delete btn btn-outline-warning btn-sm' data-bs-toggle='modal' data-bs-target='#delete-student-modal'><i class='bi bi-trash text-danger'></i></a></td>";
                 echo "</tr>";
             }
 
@@ -121,16 +122,15 @@ class studentController extends studentModel{
             
             if($result){
                 echo "You successfully updated " . $data['first_name'] . " " . $data['last_name'];
-                return;
+            }else{
+                echo "Updating " . $data['first_name'] . " " . $data['last_name'] . "failed!";
             }
         }      
-        
         
         //response modal with student name about to deleted
         function modalResponse($id){
             $data = $this->getById($id);
             echo "You’re about to delete the student profile of <span class='fw-bold text-danger'>" . htmlspecialchars($data['full_name']) . "</span> ?";
-
         }
 
         //send the id of selected student to be deleted to model
@@ -138,14 +138,60 @@ class studentController extends studentModel{
             $data = $this->getById($id);
             $result = $this->deleteStudent($id);
             if($result){
-                echo $data['full_name'] . " data has succesfully deleted!";
+                echo "<span class='fw-bold text-danger'>" . htmlspecialchars($data['full_name']) . "</span> profile has been succesfully deleted!";
             }else{
                 echo "deletion failed!";
             }
         }
     
-    
-    
+        //show list of soft deleted students
+        function getArchivedStudents($isDeleted){
+            $data = $this->getByIsDeleted($isDeleted);
+            foreach($data as $row){
+                echo "<tr>";
+                        echo "<td>" . $row['full_name'] . "</td>";
+                        echo "<td>" . $row['course'] . "</td>";
+                        echo "<td>" . $row['year_level'] . "</td>";
+                        echo "<td>" . $row['status'] . "</td>";
+                        echo "<td><a href='#' title='Restore' data-id='" . $row['id'] . "' class='restore btn btn-outline-primary btn-sm' data-bs-toggle='modal' data-bs-target='#restore-student-modal'><i class='bi bi-arrow-counterclockwise'></i></a>
+                             <a href='#' title='Delete' data-id='" . $row['id'] . "' class='permanent-delete btn btn-outline-danger btn-sm' data-bs-toggle='modal' data-bs-target='#permanent-delete-student-modal'><i class='bi bi-trash text-danger'></i></a></td>";
+                        echo "</tr>";
+            }
+        }
+        //confirmation messege for restoring students
+        function restoreModalResponse($id){
+            $data = $this->getById($id);
+            echo "Are you sure you want to restore <span class='fw-bold text-danger'>" . htmlspecialchars($data['full_name']) . "</span> student profile?";
+        }
+        
+        //send id of student about to restore to modal
+        function restore($id){
+            $data = $this->getById($id);
+            $result = $this->restoreStudent($id);
+            if($result){
+                echo "You have succesfully restore <span class='fw-bold text-success'>" . htmlspecialchars($data['full_name']) . "</span> student profile!";
+            }else{
+                echo "Restoration failed!";
+            }
+        }
+
+        function permanentDeleteModalResponse($id){
+            $data = $this->getById($id);
+            echo "Are you sure you want to permanently delete <span class='fw-bold text-danger'>" . htmlspecialchars($data['full_name']) . "</span> student profile?.
+                This action cannot be undone!";
+        }
+
+        function permanentDelete($id){
+            $data = $this->getById($id);
+            $result = $this->permanentDeleteStudent($id);
+            if($result){
+                echo "You have succesfully deleted <span class='fw-bold text-danger'>" . htmlspecialchars($data['full_name']) . "</span> student profile!";
+            }else{
+                echo "Permanent deletion failed!";
+            }
+        }
+
+
     }
 
     

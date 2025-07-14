@@ -53,6 +53,9 @@ if ($isAjax) {
                 <a class="nav-link" href="about">About</a>
                 </li>
             </ul>
+                <div class="ms-auto">
+                    <a href="login" class="btn btn-outline-primary btn-sm">Login</a>
+                </div>
             </div>
         </div>
     </nav>
