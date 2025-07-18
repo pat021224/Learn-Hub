@@ -1,6 +1,9 @@
+
 <?php
-require_once __DIR__ . '/../app/core/router.php';
+session_start();
+require_once __DIR__ . '/../vendor/autoload.php';
 use App\Core\Router;
+use App\Controller\PageController;
 
 $isAjax = (
     isset($_SERVER['HTTP_X_REQUESTED_WITH']) &&
@@ -29,55 +32,29 @@ if ($isAjax) {
 
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="#">Learn Hub</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNavDropdown">
-            <ul class="navbar-nav">
-                <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="home">Home</a>
-                </li>
-                <li class="nav-item">
-                <a class="nav-link" href="student-list">Students</a>
-                </li>
-                <li class="nav-item">
-                <a class="nav-link" href="teachers">Teachers</a>
-                </li>
-                <li class="nav-item">
-                <a class="nav-link" href="features">Features</a>
-                </li>
-                <li class="nav-item">
-                <a class="nav-link" href="about">About</a>
-                </li>
-            </ul>
-                <div class="ms-auto">
-                    <a href="login" class="btn btn-outline-primary btn-sm">Login</a>
-                </div>
-            </div>
-        </div>
-    </nav>
+    <div class="sticky-top">
+        <?php
+            $controller = new PageController();
+            $controller->showNavbar();
+        ?>
+    </div>
 
 
 
 
 
-    <nav id="page-content">
+    <div id="page-content">
         <?php
     
             $router = new Router('/Learn-Hub/public');
             $router->dispatch();
         ?>
-    </nav>
-
-    
-
-    
-    <div class="d-flex justify-content-center mt-3">
-        <p id="response"></p>
     </div>
+
+    
+
+    
+    
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
 
@@ -86,6 +63,9 @@ if ($isAjax) {
 
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script src="js/main.js?v=<?= time() ?>"></script>
+<script src="js/student.js?v=<?= time() ?>"></script>
+<script src="js/teacher.js?v=<?= time() ?>"></script>
+<script src="js/login.js?v=<?= time() ?>"></script>
 
 </body>
 </html>

@@ -1,19 +1,16 @@
 <?php
-
-namespace app\model;
-
-use app\core\database;
-require_once __DIR__ . '/../core/database.php';
+namespace App\Model;
+use App\Core\Database;
 
 //received data from *studentcontroller.php* / *function store()*
 //then save to database
-class studentModel extends Database{
-    function insertStudent($firstname, $middlename, $lastname, $gender, $dob,
+class StudentModel extends Database{
+    public function insertStudent($firstname, $middlename, $lastname, $gender, $dob,
         $email, $studentcontact, $guardianname, $guardiancontact, $nationality, $province, 
         $municipality, $barangay, $street, $zipcode, $course, $yearlevel, 
         $section, $schoolyear, $studentId){
 
-        $query = "INSERT INTO students (
+        $query = "INSERT INTO student (
             first_name, middle_name, last_name, gender, dob, email, student_contact, 
             guardian_name, guardian_contact, nationality, province, municipality, barangay, street, 
             zipcode, course, year_level, section, school_year, student_id_number
@@ -22,18 +19,18 @@ class studentModel extends Database{
 
         $stmt = $this->connect()->prepare($query);
         return $stmt->execute([
-            $firstname, $middlename, $lastname, $gender, $dob,
-            $email, $studentcontact, $guardianname, $guardiancontact,
-            $nationality, $province, $municipality, $barangay, $street, $zipcode, 
-            $course, $yearlevel, $section, $schoolyear, $studentId
+            $firstname, $middlename, $lastname, $gender, $dob, $email, 
+            $studentcontact, $guardianname, $guardiancontact, $nationality, 
+            $province, $municipality, $barangay, $street, $zipcode, $course, 
+            $yearlevel, $section, $schoolyear, $studentId
         ]);
     }
 
     //receive course data from *studentcontroller.php* / *function generateStudentId()*
     //use the data to count existing student in the database.
     //result will send back to controller
-    function getCourseCount($course, $schoolyear){
-        $query = "SELECT COUNT(*) FROM students WHERE course = ? AND school_year = ?";
+    public function getCourseCount($course, $schoolyear){
+        $query = "SELECT COUNT(*) FROM student WHERE course = ? AND school_year = ?";
         $stmt = $this->connect()->prepare($query);
         $stmt->execute([$course, $schoolyear]);
         return $stmt->fetchColumn();
@@ -41,58 +38,59 @@ class studentModel extends Database{
     }
 
     //get all data of students that are not deleted
-    function getByIsDeleted($isDeleted){
-        $query = "SELECT * FROM students WHERE is_deleted = ?";
+    public function getByIsDeleted($isDeleted){
+        $query = "SELECT * FROM student WHERE is_deleted = ?";
         $stmt = $this->connect()->prepare($query);
         $stmt->execute([$isDeleted]);
         return $stmt->fetchAll(); 
     }
 
     //update student data
-    function updateStudent($firstname, $middlename, $lastname, $gender, $dob,
-        $email, $studentcontact, $guardianname, $guardiancontact, $nationality, $province, 
-        $municipality, $barangay, $street, $zipcode, $course, $yearlevel, 
+    public function updateStudent($firstname, $middlename, $lastname, $gender, $dob,
+        $email, $studentcontact, $guardianname, $guardiancontact, $nationality, 
+        $province, $municipality, $barangay, $street, $zipcode, $course, $yearlevel, 
         $section, $schoolyear, $status, $id){
 
-        $query = "UPDATE students
+        $query = "UPDATE student
             SET
-            first_name = ?, middle_name = ?, last_name = ?, gender = ?, dob = ?, email = ?, student_contact = ?, 
-            guardian_name = ?, guardian_contact = ?, nationality = ?, province = ?, municipality = ?, barangay = ?, street = ?, 
-            zipcode = ?, course = ?, year_level = ?, section = ?, school_year = ?, status = ?
+            first_name = ?, middle_name = ?, last_name = ?, gender = ?, dob = ?, email = ?, 
+            student_contact = ?, guardian_name = ?, guardian_contact = ?, nationality = ?, 
+            province = ?, municipality = ?, barangay = ?, street = ?, zipcode = ?, course = ?, 
+            year_level = ?, section = ?, school_year = ?, status = ?
             WHERE id = ?";
 
         $stmt = $this->connect()->prepare($query);
         return $stmt->execute([
-            $firstname, $middlename, $lastname, $gender, $dob,
-            $email, $studentcontact, $guardianname, $guardiancontact,
-            $nationality, $province, $municipality, $barangay, $street, $zipcode, 
-            $course, $yearlevel, $section, $schoolyear, $status, $id
+            $firstname, $middlename, $lastname, $gender, $dob, $email, $studentcontact, 
+            $guardianname, $guardiancontact, $nationality, $province, $municipality, 
+            $barangay, $street, $zipcode, $course, $yearlevel, $section, $schoolyear, 
+            $status, $id
         ]);
     }
 
     //get student by id
-    function getById($id){
-        $query = "SELECT * FROM students WHERE id = ?";
+    public function getById($id){
+        $query = "SELECT * FROM student WHERE id = ?";
         $stmt = $this->connect()->prepare($query);
         $stmt->execute([$id]);
         return $stmt->fetch();
     }
 
     //soft delete the student data
-    function deleteStudent($id){
-       $query = "UPDATE students SET is_deleted = 1 WHERE id = ?";
+    public function deleteStudent($id){
+       $query = "UPDATE student SET is_deleted = 1 WHERE id = ?";
        $stmt = $this->connect()->prepare($query);
        return $stmt->execute([$id]);
     }
     //restore soft deleted students
-    function restoreStudent($id){
-       $query = "UPDATE students SET is_deleted = 0 WHERE id = ?";
+    public function restoreStudent($id){
+       $query = "UPDATE student SET is_deleted = 0 WHERE id = ?";
        $stmt = $this->connect()->prepare($query);
        return $stmt->execute([$id]);
     }
     //permanently delete students
-    function permanentDeleteStudent($id){
-        $query = "DELETE FROM students WHERE id = ?";
+    public function permanentDeleteStudent($id){
+        $query = "DELETE FROM student WHERE id = ?";
         $stmt = $this->connect()->prepare($query);
         return $stmt->execute([$id]);
     }

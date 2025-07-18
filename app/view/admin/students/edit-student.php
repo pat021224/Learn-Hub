@@ -72,7 +72,7 @@
       </div>
       <div class="col-lg-2 mb-3">
         <label for="zipcode" class="form-label">Zip Code</label>
-        <input type="text" class="form-control" id="zipcode" name="zipcode" readonly>
+        <input type="text" class="form-control" id="zipcode" name="zipcode">
       </div>
 
       <!-- Academic Info -->
