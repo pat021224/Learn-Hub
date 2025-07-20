@@ -47,9 +47,10 @@ class UserController{
             session_start();
         }
         
-        $_SESSION['user_id'] = $user['id'];
+        $_SESSION['id'] = $user['id'];
         $_SESSION['first_name'] = $user['first_name'];
         $_SESSION['last_name'] = $user['last_name'];
+        $_SESSION['email'] = $user['email'];
         $_SESSION['role'] = $userData['role'];
 
         

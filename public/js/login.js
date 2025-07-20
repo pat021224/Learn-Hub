@@ -6,7 +6,7 @@ if(loginForm){
         const formData = new FormData(loginForm);
         const data = await PostData('login/user', formData);
         if(data.trim() === "admin"){
-            window.location.href = "admin-dashboard";
+            window.location.href = "dashboard";
             return;
         }
         if(data.trim() === "student"){
@@ -14,7 +14,7 @@ if(loginForm){
             return;
         }
         if(data.trim() === "teacher"){
-            window.location.href = "teacher-dashboard";
+            window.location.href = "dashboard";
             return;
         }
         document.getElementById('response').innerHTML = data;

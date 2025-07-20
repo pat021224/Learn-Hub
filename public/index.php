@@ -1,9 +1,14 @@
 
 <?php
 session_start();
+$role = $_SESSION['role'] ?? null;
+$firstname = $_SESSION['first_name'] ?? null;
+$lastname = $_SESSION['last_name'] ?? null;
+$email = $_SESSION['email'] ?? null;
+
+
 require_once __DIR__ . '/../vendor/autoload.php';
-use App\Core\Router;
-use App\Controller\PageController;
+use App\Core\Router; 
 
 $isAjax = (
     isset($_SERVER['HTTP_X_REQUESTED_WITH']) &&
@@ -26,30 +31,32 @@ if ($isAjax) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Learn Hub</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-
-
+    <link rel="stylesheet" href="style.css" class="style">
 </head>
 <body>
-    <div class="sticky-top">
+
+    <!-- PAGE CONTENT -->
+    <div class="contaner-fluid">
         <?php
-            $controller = new PageController();
-            $controller->showNavbar();
+            if(!isset($_SESSION['role'])){
+                include_once __DIR__ . '/../app/view/partials/guest-layout.php';
+            } else {
+                include_once __DIR__ . '/../app/view/partials/user-layout.php';     
+            }
         ?>
     </div>
 
+    <!-- CONFIRMATION MODAL -->
+    <?php
+        include_once __DIR__ . '/../app/view/partials/confirmation-modal.php';
+    ?>
 
 
 
 
-    <div id="page-content">
-        <?php
+
     
-            $router = new Router('/Learn-Hub/public');
-            $router->dispatch();
-        ?>
-    </div>
 
     
 

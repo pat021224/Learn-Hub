@@ -31,3 +31,12 @@ async function PostJson(url, formData = null){
     console.error('error:', error);
   }
 }
+
+//sidebar toggle
+const hamburger = document.querySelector('#toggle-btn')
+const toggler = document.querySelector('#icon')
+hamburger.addEventListener('click', () => {
+  document.querySelector('#sidebar').classList.toggle('shrink');
+  toggler.classList.toggle('bi-chevron-double-left');
+  toggler.classList.toggle('bi-chevron-double-right');
+})

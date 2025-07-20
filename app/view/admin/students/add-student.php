@@ -1,4 +1,7 @@
-<div class="container mt-5">
+<div class="container mt-5 text-dark">
+    <div class="d-flex justify-content-center">
+        <h2 style="padding: 5px;">Add Student</h2>
+    </div>
     <form id="add_student_form" class="p-4 bg-white border rounded shadow mx-5">
         <div class="row justify-content-center">
             <h4>Personal Information</h4>

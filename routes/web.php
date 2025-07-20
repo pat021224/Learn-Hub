@@ -21,6 +21,12 @@ return [
     'about' => function(){
         require_once __DIR__ . '/../app/view/public/about.php';
     },
+    'features' => function(){
+        require_once __DIR__ . '/../app/view/public/features.php';
+    },
+    'contact' => function(){
+        require_once __DIR__ . '/../app/view/public/contact.php';
+    },
 
     //admin pages navigation for students
     'student-list' => function(){
@@ -135,8 +141,8 @@ return [
   
 
     //LOGIN DASHBOARDS
-    'admin-dashboard' => function(){
-        require_once __DIR__ . '/../app/view/admin/admin/admin-dashboard.php';
+    'dashboard' => function(){
+        require_once __DIR__ . '/../app/view/user/dashboard.php';
     },
     'teacher-dashboard' => function(){
         require_once __DIR__ . '/../app/view/teacher/teacher-dashboard.php';

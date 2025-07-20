@@ -135,7 +135,7 @@ document.addEventListener('click', async (e) => {
     const formData = new FormData;
     formData.append('id', selectedId);
     const data = await PostData('modal/response', formData);
-    document.getElementById('modal-response').innerHTML = data;
+    document.getElementById('delete-modal-response').innerHTML = data;
   }
   //set the id of selected student to be restored
   const restoreButton = e.target.closest('.restore');
@@ -145,7 +145,7 @@ document.addEventListener('click', async (e) => {
     selectedId = restoreButton.getAttribute('data-id');
     formData.append('id', selectedId);
     const data = await PostData('restore/modal/response', formData);
-    document.getElementById('modal-response').innerHTML = data;
+    document.getElementById('restore-modal-response').innerHTML = data;
   }
   //set the id of selected student to be permanently deleted
   const permanentDeleteButton = e.target.closest('.permanent-delete');
@@ -191,7 +191,8 @@ if(confirmRestore){
 
 const confirmPermanentDelete = document.getElementById('confirm-permanent-delete-student');
 if(confirmPermanentDelete){
-  confirmPermanentDelete.addEventListener('click', async () => {
+  confirmPermanentDelete.addEventListener('click', async (e) => {
+    e.preventDefault();
     const formData = new FormData();
     formData.append('id', selectedId);
     const data = await PostData('permanent/delete/student', formData);

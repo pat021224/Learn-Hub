@@ -1,10 +1,8 @@
+<div class="page-container d-flex justify-content-center align-item-center">
+  <div class="card shadow-sm w-100" style="max-width: 600px; max-height: fit-content; margin-top: 100px; color: #000;">
+    <div class="card-body bg-white">
 
-<!-- 🟢 WRAPPER that replaces vh-100 and centers below navbar -->
-<div class="container py-5 d-flex justify-content-center">
-  <!-- 🟢 Card for login form -->
-  <div class="card p-4 shadow-sm w-100" style="max-width: 400px;">
     <h3 class="text-center mb-3">🔐 Login</h3>
-    
     <form id="login_form">
       <!-- Email -->
       <div class="mb-3">
@@ -36,6 +34,8 @@
         <small>Don't have an account? <a href="register-btn">Register here</a></small>
       </div>
     </form>
-    
+    </div>
   </div>
 </div>
+
+<?php include __DIR__ . '/../partials/footer.php'; ?>
