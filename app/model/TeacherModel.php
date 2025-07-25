@@ -18,4 +18,10 @@ class TeacherModel extends Database{
             $phonenumber, $nationality, $province, $municipality, $barangay,
             $street, $zipcode, $department]);
     }
+    public function getByIsDeleted($table, $isDeleted){
+        $query = "SELECT * FROM `$table` WHERE is_deleted = ?";
+        $stmt = $this->connect()->prepare($query);
+        $stmt->execute([$isDeleted]);
+        return $stmt->fetchAll();
+    }
 }

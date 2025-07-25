@@ -1,42 +1,100 @@
-    <!-- Main Content -->
-    <div class="flex-grow-1 p-4 text-dark">
-      <h2 class="mb-4">Welcome, Admin</h2>
+<?php
+$firstname = $_SESSION['first_name'];
+?>
 
-      <div class="row g-4">
-        <div class="col-md-4">
-          <div class="card text-bg-primary shadow-sm">
-            <div class="card-body">
-              <h5 class="card-title">Total Students</h5>
-              <p class="card-text fs-4">120</p>
+<div class="container" id="admin-dashboard">
+  <div class="row g-3 justify-content-center gx-4 gy-4">
+  <!-- CARDS -->
+   <h1>Hi <?= $firstname ?></h1>
+    <div id="student_card" class="col-md-3">
+      <div class="card admin-card">
+          <div class="card-body">
+            <div class="row d-flex align-items-center">
+              <div class="count-wrapper col-sm-6 text-center">
+                    <span class="counts" id="registered-student"></span><br>
+                    <span>Students</span>
+              </div>
+              <div class="card-icon col-sm-6">    
+                    <i class="bi bi-people-fill"></i>
+              </div>
             </div>
           </div>
-        </div>
-        <div class="col-md-4">
-          <div class="card text-bg-success shadow-sm">
-            <div class="card-body">
-              <h5 class="card-title">Total Teachers</h5>
-              <p class="card-text fs-4">15</p>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-4">
-          <div class="card text-bg-warning shadow-sm">
-            <div class="card-body">
-              <h5 class="card-title">Registered Users</h5>
-              <p class="card-text fs-4">200</p>
-            </div>
-          </div>
-        </div>
       </div>
-
-      <hr class="my-4">
-
-      <h4>Recent Activity</h4>
-      <ul class="list-group">
-        <li class="list-group-item">John Doe registered as student</li>
-        <li class="list-group-item">New teacher account created</li>
-        <li class="list-group-item">Password reset requested</li>
-      </ul>
     </div>
+    <div id="teacher_card" class="col-md-3">
+      <div class="card admin-card">
+          <div class="card-body">
+            <div class="row d-flex align-items-center">
+              <div class="count-wrapper col-sm-6 text-center">
+                    <span class="counts" id="registered-teacher"></span><br>
+                    <span>Teachers</span>
+              </div>
+              <div class="card-icon col-sm-6">    
+                    <i class="bi bi-people-fill"></i>
+              </div>
+            </div>
+          </div>
+      </div>
+    </div>
+    <div id="user_card" class="col-md-3">
+      <div class="card admin-card">
+          <div class="card-body">
+             <div class="row d-flex align-items-center">
+              <div class="count-wrapper col-sm-6 text-center">
+                    <span class="counts" id="registered-user"></span><br>
+                    <span>Users</span>
+              </div>
+              <div class="card-icon col-sm-6">    
+                    <i class="bi bi-people-fill"></i>
+              </div>
+            </div>
+          </div>
+      </div>
+    </div>
+    <div id="admin_card" class="col-md-3">
+      <div class="card admin-card">
+          <div class="card-body">
+             <div class="row d-flex align-items-center">
+              <div class="count-wrapper col-sm-6 text-center">
+                    <span class="counts" id="registered-admin"></span><br>
+                    <span>Admins</span>
+              </div>
+              <div class="card-icon col-sm-6">    
+                    <i class="bi bi-people-fill"></i>
+              </div>
+            </div>
+          </div>
+      </div>
+    </div>
+
+  <!-- LIST -->
+<div class="card bg-dark text-white mx-3 mx-md-5 mt-3">
+  <div class="card-body p-0">
+    
+    <form id="student_list_form" class="p-4 mx-2 mx-md-5">
+      <h3>List of Users</h3>  
+      <!-- 🛠️ Wrap table with .table-responsive -->
+      <div class="table-responsive">
+        <table class="table table-dark table-striped table-hover">
+          <thead>
+            <tr>
+              <th scope="col">First Name</th>
+              <th scope="col">Last Name</th>
+              <th scope="col">Email</th>
+              <th scope="col">Role</th>
+            </tr>
+          </thead>
+          <tbody id="response">
+          </tbody>
+        </table>
+      </div>
+      <div class="d-flex justify-content-center">
+        <p id="delete-response" class="fw-bold"></p>
+      </div>
+    </form>
   </div>
- 
+</div>   
+
+    
+  </div>
+</div>

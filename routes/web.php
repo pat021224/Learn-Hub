@@ -2,6 +2,8 @@
 use App\Controller\StudentController;
 use App\Controller\UserController;
 use App\Controller\TeacherController;
+use App\Controller\AdminController;
+use App\Controller\MainController;
 
 return [
     //FORMS STUFF
@@ -35,27 +37,34 @@ return [
     'add-student' => function(){
         require_once __DIR__ . '/../app/view/admin/students/add-student.php';
     },
-    'restore-student' => function(){
+    'archived-student' => function(){
         require_once __DIR__ . '/../app/view/admin/students/archived-students.php';
     },
     'edit-student' => function(){
         require_once __DIR__ . '/../app/view/admin/students/edit-student.php';
     },
+    'get/count' => function(){
+        $table = $_POST['table'];
+        $isDeleted = $_POST['isDeleted'];
+        $controller = new AdminController();
+        $controller->getCount($table, $isDeleted);
+    },
+    'get/user' => function(){
+        $table = $_POST['table'];
+        $isDeleted = $_POST['isDeleted'];
+        $controller = new AdminController();
+        $controller->getUser($table, $isDeleted);
+    },
+
+
     //handles form submission for students
     'store/student' => function(){
         $controller = new StudentController();
         $controller->store();
     },
-    'get/course/count' => function(){
-        $course = $_POST['course'] ?? null;
-        $schoolyear = $_POST['school_year'] ?? null;
-        $controller = new StudentController();
-        $controller->generateStudentId($course, $schoolyear);
-    },
     'student/list' => function(){
-        $isDeleted = $_POST['isDeleted'];
         $controller = new StudentController();
-        $controller->show($isDeleted);
+        $controller->show();
     },
     'edit/student' => function(){
         $id = $_POST['id'];
@@ -66,57 +75,58 @@ return [
         $controller = new StudentController();
         $controller->update();
     },
-    'modal/response' => function(){
-        $id = $_POST['id'];
-        $controller = new StudentController();
-        $controller->modalResponse($id);
-    },
-    'delete/student' => function(){
-        $id = $_POST['id'];
-        $controller = new StudentController();
-        $controller->delete($id);
-    },
     'archived/students' => function(){
-        $isDeleted = $_POST['isDeleted'];
         $controller = new StudentController();
-        $controller->getArchivedStudents($isDeleted);
+        $controller->getArchivedStudents();
     },
-    'restore/modal/response' => function(){
+
+
+
+    //SOFT DELETE/ DELETE / RESTORE
+    
+    'soft/delete' => function(){
+        $table = $_POST['table'];
         $id = $_POST['id'];
-        $controller = new StudentController();
-        $controller->restoreModalResponse($id);
+        $controller = new MainController();
+        $controller->softDelete($table, $id);
     },
-    'restore/student' => function(){
+    'restore' => function(){
+        $table = $_POST['table'];
         $id = $_POST['id'];
-        $controller = new StudentController();
-        $controller->restore($id);
+        $controller = new MainController();
+        $controller->restore($table, $id);
     },
-    'permanent/delete/modal/response' => function(){
+    'permanent/delete' => function(){
+        $table = $_POST['table'];
         $id = $_POST['id'];
-        $controller = new StudentController();
-        $controller->permanentDeleteModalResponse($id);
-    },
-    'permanent/delete/student' => function(){
-        $id = $_POST['id'];
-        $controller = new StudentController();
-        $controller->permanentDelete($id);
+        $controller = new MainController();
+        $controller->permanentDelete($table, $id);
     },
 
     
     //admin pages navigation for teachers
-    'teachers' => function(){
+    'teacher-list' => function(){
         require_once __DIR__ . '/../app/view/admin/teachers/teacher-list.php';
     },
     'add-teacher' => function(){
         require_once __DIR__ . '/../app/view/admin/teachers/add-teacher.php';
     },
+    'archived-teacher' => function(){
+        require_once __DIR__ . '/../app/view/admin/teachers/archived-teachers.php';
+    },
     //handles form submission for teachers
     'add/teacher' => function(){
-        $controller = new teacherController();
+        $controller = new TeacherController();
         $controller->store();
     },
-
-
+    'get/teacher/list' => function(){
+        $controller = new TeacherController();
+        $controller->show();
+    },
+    'archived/teachers' => function(){
+        $controller = new TeacherController();
+        $controller->showArchivedTeacher();
+    },
 
     //USERS AREA
     //users pages navigation
@@ -149,6 +159,20 @@ return [
     },
     'student-dashboard' => function(){
         require_once __DIR__ . '/../app/view/student/student-dashboard.php';
-    }
+    },
+    'modal/confirmation' => function(){
+        $action = $_POST['action'];
+        $table = $_POST['table'];
+        $id = $_POST['id'];
+        $controller = new MainController();
+        $controller->modalResponse($action, $table, $id);
+    },
 
+    //SEARCH
+    'search' => function(){
+        $table = $_POST['table'];
+        $keyword = $_POST['keyword'];
+        $controller = new MainController();
+        $controller->search($table, $keyword);
+    },
 ];

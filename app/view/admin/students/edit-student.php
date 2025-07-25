@@ -111,12 +111,14 @@
         </select>
       </div>
     </div>
+    <div class="text-center">
+      <p id="response"></p>
+    </div>
     <div class="text-end">
       <button type="submit" class="btn btn-success" id="update-btn">Update Student</button>
     </div>
   </form>
   <div class="d-flex justify-content-center">
-    <p id="response">s</p>
   </div>
 </div>
 

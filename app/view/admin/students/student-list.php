@@ -1,5 +1,5 @@
 <div class="d-flex justify-content-end gap-2 m-2">
-  <a href="restore-student" class="btn btn-outline-secondary btn-sm">
+  <a href="archived-student" class="btn btn-outline-secondary btn-sm">
     <i class="bi bi-archive"></i> Archived
   </a>    
   <a href="add-student" class="btn btn-primary btn-sm">
@@ -7,8 +7,17 @@
   </a>  
 </div>
 <div class="px-3 px-md-5 pt-4">
-  <h4 class="fw-bold text-dark">Student List</h4>
-  <p class="text-muted mb-0">View and manage all registered students</p>
+  <div class="row">
+    <div class="col-sm-8">
+      <h4 class="fw-bold text-dark">Student List</h4>
+    </div>
+    <div class="container-fluid col-sm-4">
+      <form id="search-form" class="d-flex" role="search">
+        <input id="search-box" name="student" class="form-control me-2" type="search" placeholder="Search" aria-label="Search"/>
+        <button class="btn btn-outline-success" type="submit">Search</button>
+      </form>
+    </div>
+  </div>
 </div>
 <div class="card bg-dark text-white mx-3 mx-md-5 mt-3">
   <div class="card-body p-0">
@@ -34,7 +43,7 @@
         </table>
       </div>
       <div class="d-flex justify-content-center">
-        <p id="delete-response" class="fw-bold"></p>
+        <p id="action-response" class="fw-bold"></p>
       </div>
     </form>
   </div>

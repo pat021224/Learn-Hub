@@ -1,11 +1,11 @@
-<form id="archived_students_form" class="p-4 mx-5">
+<form id="archived_teachers_form" class="p-4 mx-5">
 <table class="table table-dark table-striped">
   <thead>
     <tr>
-      <th scope="col">Full Name</th>
-      <th scope="col">Course</th>
-      <th scope="col">Year Level</th>
-      <th scope="col">Status</th>
+      <th scope="col">First Name</th>
+      <th scope="col">Middle Name</th>
+      <th scope="col">Last Name</th>
+      <th scope="col">Department</th>
       <th scope="col">Actions</th>
     </tr>
   </thead>
@@ -16,8 +16,6 @@
     <p id="action-response" class="fw-bold"></p>
   </div>
 </form>
-
-
 
 
 

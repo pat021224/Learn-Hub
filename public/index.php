@@ -1,11 +1,6 @@
 
 <?php
 session_start();
-$role = $_SESSION['role'] ?? null;
-$firstname = $_SESSION['first_name'] ?? null;
-$lastname = $_SESSION['last_name'] ?? null;
-$email = $_SESSION['email'] ?? null;
-
 
 require_once __DIR__ . '/../vendor/autoload.php';
 use App\Core\Router; 
@@ -51,18 +46,7 @@ if ($isAjax) {
     <?php
         include_once __DIR__ . '/../app/view/partials/confirmation-modal.php';
     ?>
-
-
-
-
-
     
-
-    
-
-    
-    
-
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
@@ -73,6 +57,7 @@ if ($isAjax) {
 <script src="js/student.js?v=<?= time() ?>"></script>
 <script src="js/teacher.js?v=<?= time() ?>"></script>
 <script src="js/login.js?v=<?= time() ?>"></script>
+<script src="js/admin.js?v=<?= time() ?>"></script>
 
 </body>
 </html>

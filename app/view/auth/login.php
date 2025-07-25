@@ -1,5 +1,5 @@
-<div class="page-container d-flex justify-content-center align-item-center">
-  <div class="card shadow-sm w-100" style="max-width: 600px; max-height: fit-content; margin-top: 100px; color: #000;">
+<div class="d-flex justify-content-center align-item-center">
+  <div class="card shadow-sm w-100" style="max-width: 500px; max-height: fit-content; margin-top: 100px; color: #000;">
     <div class="card-body bg-white">
 
     <h3 class="text-center mb-3">🔐 Login</h3>
@@ -38,4 +38,4 @@
   </div>
 </div>
 
-<?php include __DIR__ . '/../partials/footer.php'; ?>
+

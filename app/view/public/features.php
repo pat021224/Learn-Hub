@@ -1,9 +1,9 @@
 <!-- Features Page -->
-<div class="page-container d-flex justify-content-center">
+<div class="d-flex justify-content-center">
     <div style="margin-top: 100px; width: 1000px;">
         <div class="text-center mb-5">
-  <h1 class="fw-bold text-center mb-4">Our Features</h1>
-  <p class="lead text-center mb-5">
+  <h1 class="fw-bold text-center text-white mb-4">Our Features</h1>
+  <p class="lead text-center text-white mb-5">
     Discover the powerful features designed to help you succeed.
   </p>
 
@@ -78,4 +78,3 @@
 </div>
 </div>
 
-<?php include __DIR__ . '/../partials/footer.php'; ?>

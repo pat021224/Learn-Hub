@@ -6,7 +6,9 @@ body {
     margin: 0;
     padding: 0;
     background-color: #1f2d3d;
-    color: #fff;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
 }
 /*HERO SECTION*/
 .navbar-brand i{
@@ -95,6 +97,7 @@ body {
 #sidebar.shrink{
     width: 70px;
     min-width: 70px;
+    
 }
 #toggle-btn{
     background-color: transparent;
@@ -154,16 +157,41 @@ a.sidebar-link:hover{
   }
 }
 /*PAGES*/
-.page-container{
-    height: 100vh;
-    width: 100vw;
-    margin: 0;
-    padding: 0;
-}
+
 /*FOOTER*/
 .footer{
-    position: absolute;
     background-color: #343a40;
+    color: #fff;
+    padding: 20px;
+}
+.footer-link{
+    text-decoration: none;
+    color: inherit;
+}
+.footer-link:hover{
+    color: #000;
+}
+
+/*ADMIN CARD*/
+.admin-card{
+    border-radius: 20px;
+    transition: transform 0.3s ease, background-color 0.3s ease;
+}
+.admin-card:hover{
+    transition: all .25s ease-in-out;
+    transform: scale(1.03);
+    background-color: #1f2d3d;
+    color: #fff;
+    cursor: pointer;
+}
+.card-icon{
+    font-size: 80px;
+}
+.count-wrapper{
+    line-height: 1;
+}
+.counts{
+    font-size: 50px;
 }
 
 

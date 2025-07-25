@@ -1,5 +1,6 @@
 <?php
 use App\Core\Router;
+$role = $_SESSION['role'];
 
 $admin = <<<HTML
             <li class="nav-item">

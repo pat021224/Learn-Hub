@@ -1,4 +1,4 @@
-<div class="page-container d-flex justify-content-center">
+<div class="d-flex justify-content-center text-white">
     <div style="margin-top: 100px; width: fit-content">
         <div class="text-center">
             <h1 class="fw-bold">About Us</h1>
@@ -33,4 +33,3 @@
 </div>
 
 
-<?php include __DIR__ . '/../partials/footer.php'; ?>
