@@ -5,18 +5,18 @@ use App\Core\Validator;
 use App\Model\MainModel;
 
 class TeacherController{
-    private $validator;
+    private $Validator;
     private $Model;
     private $MainModel;
 
     public function __construct(){
-        $this->validator = new Validator();
+        $this->Validator = new Validator();
         $this->Model = new TeacherModel();
         $this->MainModel = new MainModel();
     }
 
     public function store(){
-        $validate = $this->validator->formValidation($_POST);
+        $validate = $this->Validator->formValidation($_POST);
         $errors = $validate['errors'];
         if(!empty($errors)){
             foreach($errors as $error){
@@ -66,6 +66,44 @@ class TeacherController{
                     <a href='#' title='Delete' id='teacher' data-id='" . $row['id'] . "' class='permanent-delete btn btn-outline-danger btn-sm' data-bs-toggle='modal' data-bs-target='#confirmation-modal'><i class='bi bi-trash text-danger'></i></a></td>";
             echo "</tr>";
         }
+
+    }
+    public function load($id){
+            $data = $this->MainModel->getBy('*', 'teacher', 'id', $id);
+            header('Content-Type: application/json');
+            echo json_encode($data);      
     }
 
+    public function update(){
+        $validate = $this->Validator->formValidation($_POST);
+        $errors = $validate['errors'];
+        if($errors){
+            foreach($errors as $error){
+                echo $error;
+                return;
+            }
+        }
+        $clean = $validate['sanitized'];
+        $data = [
+            'first_name' => $clean['first_name'], 
+            'middle_name' => $clean['middle_name'], 
+            'last_name' => $clean['last_name'], 
+            'gender' => $clean['gender'],
+            'dob' => $clean['dob'], 
+            'email' => $clean['email'], 
+            'phone_number' => $clean['phone_number'], 
+            'nationality' => $clean['nationality'],
+            'province' => $clean['province'], 
+            'municipality' => $clean['municipality'], 
+            'barangay' => $clean['barangay'], 
+            'street' => $clean['street'],
+            'zipcode' => $clean['zipcode'], 
+            'department' => $clean['department']
+        ];
+        $id = $clean['id'];
+        $status = $this->MainModel->update('teacher', $data, 'id', $id);
+        echo $status
+        ? "You successfully updated " . $data['first_name'] . " " . $data['last_name']
+        : "Updating " . $data['first_name'] . " " . $data['last_name'] . " failed!";
+    }
 }

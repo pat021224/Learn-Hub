@@ -89,13 +89,13 @@ $student = <<<HTML
         </div>
         <ul class="sidebar-nav">
             <li class="nav-item">
-                <a class="sidebar-link" href="#">
+                <a class="sidebar-link" href="profile">
                     <i class="bi bi-person-circle"></i>
                     <span>Profile</span>
                 </a>
             </li>
             <li class="sidebar-item">
-                <a class="sidebar-link" href="/newsfeed.php">
+                <a class="sidebar-link" href="newsfeed">
                     <i class="bi bi-newspaper"></i>
                     <span>News Feed</span>
                 </a>

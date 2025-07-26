@@ -114,6 +114,10 @@ return [
     'archived-teacher' => function(){
         require_once __DIR__ . '/../app/view/admin/teachers/archived-teachers.php';
     },
+    'edit-teacher' => function(){
+        require_once __DIR__ . '/../app/view/admin/teachers/edit-teacher.php';
+    },
+
     //handles form submission for teachers
     'add/teacher' => function(){
         $controller = new TeacherController();
@@ -127,6 +131,16 @@ return [
         $controller = new TeacherController();
         $controller->showArchivedTeacher();
     },
+    'edit/teacher' => function(){
+        $id = $_POST['id'];
+        $controller = new TeacherController();
+        $controller->load($id);
+    },
+    'update/teacher' => function(){     
+        $controller = new TeacherController();
+        $controller->update();
+    },
+    
 
     //USERS AREA
     //users pages navigation
@@ -139,6 +153,7 @@ return [
     'register' => function(){
         require_once __DIR__ . '/../app/view/auth/register.php';
     },
+
     //handles form submission for users
     'login/user' => function(){
         $controller = new UserController();
@@ -150,7 +165,7 @@ return [
     },
   
 
-    //LOGIN DASHBOARDS
+    //USERS
     'dashboard' => function(){
         require_once __DIR__ . '/../app/view/user/dashboard.php';
     },
@@ -160,6 +175,16 @@ return [
     'student-dashboard' => function(){
         require_once __DIR__ . '/../app/view/student/student-dashboard.php';
     },
+    'profile' => function(){
+        require_once __DIR__ . '/../app/view/user/profile.php';
+    },
+    'newsfeed' => function(){
+        require_once __DIR__ . '/../app/view/user/newsfeed.php';
+    },
+
+
+
+    //modal confirmation
     'modal/confirmation' => function(){
         $action = $_POST['action'];
         $table = $_POST['table'];
